@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Crypto Quadro RW Helper · Italy</title>
+  <meta name="description" content="Estimate the Italian Imposta sulle Criptoattivita (Quadro RW, 0.2%) for your BTC/ETH holdings." />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <main class="card">
+    <header>
+      <h1>Crypto Quadro RW Helper</h1>
+      <p class="sub">Italian <em>Imposta sulle Criptoattività</em> (IC, 0.2%) on BTC / ETH holdings.</p>
+    </header>
+
+    <div id="price-warning" class="banner banner-warn" hidden>
+      ⚠️ Bundled prices are <strong>approximate placeholders</strong>. Verify each value
+      against a primary source before using this for a real filing.
+    </div>
+
+    <form id="form" autocomplete="off">
+      <div class="field">
+        <label for="coin">Crypto</label>
+        <select id="coin" name="coin"></select>
+      </div>
+
+      <div class="field">
+        <label for="year">Tax year</label>
+        <select id="year" name="year"></select>
+      </div>
+
+      <div class="field">
+        <label for="quantity">Quantity held</label>
+        <input id="quantity" name="quantity" type="number" min="0" step="any" inputmode="decimal" placeholder="e.g. 1.5" />
+      </div>
+
+      <div class="field">
+        <label for="giorni">Days held <span class="hint">(default: full year)</span></label>
+        <input id="giorni" name="giorni" type="number" min="0" step="1" placeholder="leave blank for full year" />
+      </div>
+    </form>
+
+    <div id="error" class="banner banner-error" hidden></div>
+
+    <section id="result" class="result" hidden>
+      <h2>Quadro RW</h2>
+      <table>
+        <tbody>
+          <tr><th>Codice bene</th><td>21 (cripto-attività)</td></tr>
+          <tr><th>Valore iniziale (1 Jan)</th><td id="r-iniziale"></td></tr>
+          <tr><th>Valore finale (31 Dec)</th><td id="r-finale"></td></tr>
+          <tr><th>Giorni di possesso</th><td id="r-giorni"></td></tr>
+          <tr class="highlight"><th>IC dovuta (0.2%)</th><td id="r-ic"></td></tr>
+        </tbody>
+      </table>
+
+      <p class="info" id="r-info"></p>
+      <p class="prices-note" id="r-prices"></p>
+    </section>
+
+    <footer>
+      <p class="disclaimer">
+        <strong>Estimate / compilation aid — not tax advice.</strong>
+        IC (Quadro RW) is a holding tax. Capital gains (Quadro RT, 26% / 33% from 2026)
+        apply only when you <em>sell</em>, and are shown for information only.
+        Values use spot EUR prices, not the official <em>cambio</em> rates
+        (C.M. 10/2014). Verify before filing.
+      </p>
+      <p class="src">Open source · static page · no data leaves your browser.</p>
+    </footer>
+  </main>
+
+  <script type="module" src="src/app.js"></script>
+</body>
+</html>

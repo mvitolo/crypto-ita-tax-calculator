@@ -1,0 +1,12 @@
+{
+  "name": "cryptocalculator",
+  "version": "0.1.0",
+  "description": "Italian crypto Quadro RW helper — estimate the Imposta sulle Criptoattivita (IC, 0.2%) for BTC/ETH holdings.",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "test": "node --test",
+    "serve": "python3 -m http.server 8000"
+  },
+  "license": "MIT"
+}
