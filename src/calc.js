@@ -24,6 +24,10 @@ export const TAX_RULES = {
   icRate: 0.002, // 0.2% Imposta sulle Criptoattivita (Quadro RW)
 };
 
+// The Italian crypto IC (Quadro RW) and 26% capital-gains regime both began in
+// 2023 (L. 197/2022). Figures for earlier years are illustrative only.
+export const REGIME_START_YEAR = 2023;
+
 export function isLeapYear(year) {
   return (year % 4 === 0 && year % 100 !== 0) || year % 400 === 0;
 }

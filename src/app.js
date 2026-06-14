@@ -1,7 +1,7 @@
 // DOM layer: wires the form to the pure calc.js logic, syncs state to the URL,
 // and renders the Quadro RW row. All math lives in calc.js (unit-tested).
 
-import { computeRW, availableYears } from "./calc.js";
+import { computeRW, availableYears, REGIME_START_YEAR } from "./calc.js";
 import { PRICES, COINS, hasUnverifiedPrices } from "./prices.js";
 
 const eur = new Intl.NumberFormat("it-IT", { style: "currency", currency: "EUR" });
@@ -27,6 +27,7 @@ const els = {
   info: $("r-info"),
   pricesNote: $("r-prices"),
   priceWarning: $("price-warning"),
+  regimeNote: $("regime-note"),
 };
 
 // ── Setup: populate selects ─────────────────────────────────────────────────
@@ -137,6 +138,7 @@ function render() {
   els.info.textContent = info;
 
   els.pricesNote.textContent = priceSourceNote(r);
+  els.regimeNote.hidden = year >= REGIME_START_YEAR;
   els.result.hidden = false;
 }
 
