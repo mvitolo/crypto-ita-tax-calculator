@@ -26,14 +26,14 @@ export const PRICES = {
     2022: { start: approx(42000), end: approx(15500) },
     2023: { start: approx(15600), end: approx(38300) },
     2024: { start: approx(40000), end: approx(90200) },
-    // 2025: { start: approx(?), end: approx(?) },  // add once verified
+    2025: { start: approx(91188), end: approx(75272) },
   },
   ethereum: {
     2021: { start: approx(600),  end: approx(3250) },
     2022: { start: approx(3320), end: approx(1125) },
     2023: { start: approx(1125), end: approx(2075) },
     2024: { start: approx(2075), end: approx(3215) },
-    // 2025: { start: approx(?), end: approx(?) },  // add once verified
+    2025: { start: approx(3237), end: approx(2553) },
   },
 };
 
