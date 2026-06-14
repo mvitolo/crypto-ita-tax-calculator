@@ -27,9 +27,9 @@ export const PRICES = {
     2023: { start: approx(15600), end: approx(38300) },
     2024: { start: approx(40000), end: approx(90200) },
     2025: {
-      // EUR-native (not FX-converted). Still confirm against your broker's records for filing.
-      start: { value: 91431, source: "BTC-EUR web (Bitcoin X, 1 Jan 2025)", retrieved: "2026-06-14" },
-      end: { value: 74495, source: "BTC-EUR web (exchange-rates.org, 31 Dec 2025)", retrieved: "2026-06-14" },
+      // investing.com BTC/EUR daily close, EUR-native. Raw data: data/2025-btc-eur.json
+      start: { value: 91186.0, source: "investing.com BTC/EUR daily close (1 Jan 2025)", retrieved: "2026-06-14" },
+      end: { value: 74500.1, source: "investing.com BTC/EUR daily close (31 Dec 2025)", retrieved: "2026-06-14" },
     },
   },
   ethereum: {
@@ -37,7 +37,11 @@ export const PRICES = {
     2022: { start: approx(3320), end: approx(1125) },
     2023: { start: approx(1125), end: approx(2075) },
     2024: { start: approx(2075), end: approx(3215) },
-    2025: { start: approx(3237), end: approx(2553) },
+    2025: {
+      // investing.com ETH/EUR daily close, EUR-native. Raw data: data/2025-eth-eur.json
+      start: { value: 3238.32, source: "investing.com ETH/EUR daily close (1 Jan 2025)", retrieved: "2026-06-14" },
+      end: { value: 2525.99, source: "investing.com ETH/EUR daily close (31 Dec 2025)", retrieved: "2026-06-14" },
+    },
   },
 };
 
