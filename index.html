@@ -21,22 +21,22 @@
 
     <form id="form" autocomplete="off">
       <div class="field">
-        <label for="coin">Crypto</label>
-        <select id="coin" name="coin"></select>
-      </div>
-
-      <div class="field">
         <label for="year">Tax year</label>
         <select id="year" name="year"></select>
       </div>
 
       <div class="field">
-        <label for="quantity">Quantity held</label>
-        <input id="quantity" name="quantity" type="number" min="0" step="any" inputmode="decimal" placeholder="e.g. 1.5" />
+        <label for="qty-btc">Bitcoin (BTC) held</label>
+        <input id="qty-btc" name="qty-btc" type="number" min="0" step="any" inputmode="decimal" placeholder="e.g. 0.5" />
       </div>
 
       <div class="field">
-        <label for="giorni">Days held <span class="hint">(default: full year)</span></label>
+        <label for="qty-eth">Ethereum (ETH) held</label>
+        <input id="qty-eth" name="qty-eth" type="number" min="0" step="any" inputmode="decimal" placeholder="e.g. 4" />
+      </div>
+
+      <div class="field">
+        <label for="giorni">Days held <span class="hint">(default: full year, applies to both)</span></label>
         <input id="giorni" name="giorni" type="number" min="0" step="1" placeholder="leave blank for full year" />
       </div>
     </form>
@@ -49,17 +49,30 @@
         <strong>2023</strong>. Figures for earlier years are illustrative — those
         rules did not apply yet.
       </div>
-      <h2>Quadro RW</h2>
-      <table>
-        <tbody>
-          <tr><th>Codice bene</th><td>21 (cripto-attività)</td></tr>
-          <tr><th>Valore iniziale (1 Jan)</th><td id="r-iniziale"></td></tr>
-          <tr><th>Valore finale (31 Dec)</th><td id="r-finale"></td></tr>
-          <tr><th>Giorni di possesso</th><td id="r-giorni"></td></tr>
-          <tr class="highlight"><th>IC dovuta (0.2%)</th><td id="r-ic"></td></tr>
-        </tbody>
+      <h2>Quadro RW — <span id="r-year"></span></h2>
+      <table class="rw-table">
+        <thead>
+          <tr>
+            <th>Cripto</th>
+            <th>Valore iniz. (1 Jan)</th>
+            <th>Valore fin. (31 Dec)</th>
+            <th>Giorni</th>
+            <th>IC (0,2%)</th>
+          </tr>
+        </thead>
+        <tbody id="r-rows"></tbody>
+        <tfoot>
+          <tr class="highlight">
+            <th>Totale · codice 21</th>
+            <td id="t-iniziale"></td>
+            <td id="t-finale"></td>
+            <td id="t-giorni"></td>
+            <td id="t-ic"></td>
+          </tr>
+        </tfoot>
       </table>
 
+      <p class="rw-hint">↑ The <strong>Totale</strong> row is what goes in Quadro RW: all crypto aggregates into one row (codice bene 21).</p>
       <p class="info" id="r-info"></p>
       <p class="prices-note" id="r-prices"></p>
     </section>

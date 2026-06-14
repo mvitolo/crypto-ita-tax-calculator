@@ -119,3 +119,27 @@ export function computeRW({ prices, coin, year, quantity, giorni }) {
     capitalGains,
   };
 }
+
+// Aggregate several holdings into the single Quadro RW row (codice 21).
+// holdings: [{ coin, quantity }]. Entries with quantity <= 0 are skipped.
+// The €2,000 capital-gains exemption is applied ONCE to the total gain, matching
+// how Quadro RT aggregates realized gains over the year (not per asset).
+//
+//   per-coin computeRW ──┐
+//   per-coin computeRW ──┼─► sum(valoreIniziale, valoreFinale, IC)
+//                        └─► total delta ─► computeCapitalGainsInfo (exemption once)
+export function computePortfolio({ prices, year, holdings, giorni }) {
+  const rows = [];
+  for (const h of holdings) {
+    const q = Number(h.quantity);
+    if (!Number.isFinite(q) || q <= 0) continue;
+    rows.push(computeRW({ prices, coin: h.coin, year, quantity: q, giorni }));
+  }
+  const sum = (sel) => rows.reduce((acc, r) => acc + sel(r), 0);
+  const valoreIniziale = sum((r) => r.valoreIniziale);
+  const valoreFinale = sum((r) => r.valoreFinale);
+  const ic = sum((r) => r.ic);
+  const delta = valoreFinale - valoreIniziale;
+  const capitalGains = computeCapitalGainsInfo({ delta, year });
+  return { year, rows, valoreIniziale, valoreFinale, ic, delta, capitalGains };
+}

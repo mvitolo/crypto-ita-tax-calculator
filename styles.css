@@ -77,6 +77,32 @@ tr.highlight th, tr.highlight td {
   font-size: 1.05rem;
 }
 
+/* Multi-column Quadro RW table (BTC + ETH rows + total) */
+.rw-table th, .rw-table td {
+  width: auto;
+  padding: 0.5rem 0.4rem;
+  font-size: 0.9rem;
+}
+.rw-table thead th {
+  color: var(--muted);
+  font-weight: 500;
+  text-align: right;
+  border-bottom: 1px solid var(--line);
+}
+.rw-table thead th:first-child { text-align: left; }
+.rw-table tbody th, .rw-table tfoot th {
+  text-align: left;
+  font-weight: 600;
+  color: var(--text);
+}
+.rw-table td { text-align: right; font-variant-numeric: tabular-nums; }
+.rw-table tfoot .highlight th, .rw-table tfoot .highlight td {
+  background: var(--highlight);
+  color: #fff;
+  font-weight: 700;
+}
+.rw-hint { font-size: 0.8rem; color: var(--muted); margin: 0.5rem 0 0; }
+
 .info {
   margin: 1rem 0 0.5rem;
   font-size: 0.9rem;

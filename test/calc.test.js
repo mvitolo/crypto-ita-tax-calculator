@@ -11,6 +11,7 @@ import {
   computeIC,
   computeCapitalGainsInfo,
   computeRW,
+  computePortfolio,
   TAX_RULES,
 } from "../src/calc.js";
 import { PRICES } from "../src/prices.js";
@@ -142,6 +143,56 @@ test("GOLDEN: IC and capital gains for a €90,200 / €40,000 holding in 2024",
   close(cg.taxable, 48200);
   close(cg.tax, 12532);
   assert.equal(TAX_RULES.icRate, 0.002);
+});
+
+// ── computePortfolio (aggregate BTC + ETH into the Quadro RW row) ────────────
+test("portfolio: sums valore iniziale/finale/IC across coins", () => {
+  const p = computePortfolio({
+    prices: PRICES,
+    year: 2024,
+    holdings: [{ coin: "bitcoin", quantity: 1 }, { coin: "ethereum", quantity: 10 }],
+  });
+  const btc = computeRW({ prices: PRICES, coin: "bitcoin", year: 2024, quantity: 1 });
+  const eth = computeRW({ prices: PRICES, coin: "ethereum", year: 2024, quantity: 10 });
+  assert.equal(p.rows.length, 2);
+  close(p.valoreIniziale, btc.valoreIniziale + eth.valoreIniziale);
+  close(p.valoreFinale, btc.valoreFinale + eth.valoreFinale);
+  close(p.ic, btc.ic + eth.ic);
+  close(p.delta, btc.delta + eth.delta);
+});
+
+test("portfolio: skips zero/blank quantities", () => {
+  const p = computePortfolio({
+    prices: PRICES,
+    year: 2024,
+    holdings: [{ coin: "bitcoin", quantity: 0.5 }, { coin: "ethereum", quantity: 0 }],
+  });
+  assert.equal(p.rows.length, 1);
+  assert.equal(p.rows[0].coin, "bitcoin");
+});
+
+test("portfolio: €2000 exemption applied ONCE to the total gain, not per coin", () => {
+  // Two coins each with a 1500 gain. Per-coin both are below €2000 (would be 0
+  // tax each); aggregated the 3000 total minus 2000 exemption = 1000 taxable.
+  const MOCK = {
+    a: { 2024: { start: { value: 0 }, end: { value: 1500 } } },
+    b: { 2024: { start: { value: 0 }, end: { value: 1500 } } },
+  };
+  const p = computePortfolio({
+    prices: MOCK,
+    year: 2024,
+    holdings: [{ coin: "a", quantity: 1 }, { coin: "b", quantity: 1 }],
+  });
+  close(p.delta, 3000);
+  close(p.capitalGains.taxable, 1000);
+  close(p.capitalGains.tax, 260); // 1000 × 26%
+});
+
+test("portfolio: empty holdings → no rows, zero totals", () => {
+  const p = computePortfolio({ prices: PRICES, year: 2024, holdings: [] });
+  assert.equal(p.rows.length, 0);
+  assert.equal(p.valoreFinale, 0);
+  assert.equal(p.ic, 0);
 });
 
 // ── availableYears ──────────────────────────────────────────────────────────
