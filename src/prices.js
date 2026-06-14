@@ -26,7 +26,11 @@ export const PRICES = {
     2022: { start: approx(42000), end: approx(15500) },
     2023: { start: approx(15600), end: approx(38300) },
     2024: { start: approx(40000), end: approx(90200) },
-    2025: { start: approx(91188), end: approx(75272) },
+    2025: {
+      // EUR-native (not FX-converted). Still confirm against your broker's records for filing.
+      start: { value: 91431, source: "BTC-EUR web (Bitcoin X, 1 Jan 2025)", retrieved: "2026-06-14" },
+      end: { value: 74495, source: "BTC-EUR web (exchange-rates.org, 31 Dec 2025)", retrieved: "2026-06-14" },
+    },
   },
   ethereum: {
     2021: { start: approx(600),  end: approx(3250) },
