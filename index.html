@@ -1,43 +1,43 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="it">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Crypto Quadro RW Helper · Italy</title>
-  <meta name="description" content="Estimate the Italian Imposta sulle Criptoattivita (Quadro RW, 0.2%) for your BTC/ETH holdings." />
+  <title>Calcolo Quadro RW Cripto · Italia</title>
+  <meta name="description" content="Calcola l'Imposta sulle Criptoattività (Quadro RW, 0,2%) per le tue cripto BTC/ETH." />
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
   <main class="card">
     <header>
-      <h1>Crypto Quadro RW Helper</h1>
-      <p class="sub">Italian <em>Imposta sulle Criptoattività</em> (IC, 0.2%) on BTC / ETH holdings.</p>
+      <h1>Calcolo Quadro RW Cripto</h1>
+      <p class="sub"><em>Imposta sulle Criptoattività</em> (IC, 0,2%) su cripto BTC / ETH.</p>
     </header>
 
     <div id="price-warning" class="banner banner-warn" hidden>
-      ⚠️ Bundled prices are <strong>approximate placeholders</strong>. Verify each value
-      against a primary source before using this for a real filing.
+      ⚠️ I prezzi inclusi sono <strong>valori approssimativi</strong>. Verifica ogni
+      valore con una fonte ufficiale prima di usarlo per una dichiarazione reale.
     </div>
 
     <form id="form" autocomplete="off">
       <div class="field">
-        <label for="year">Tax year</label>
+        <label for="year">Anno d'imposta</label>
         <select id="year" name="year"></select>
       </div>
 
       <div class="field">
-        <label for="qty-btc">Bitcoin (BTC) held</label>
-        <input id="qty-btc" name="qty-btc" type="number" min="0" step="any" inputmode="decimal" placeholder="e.g. 0.5" />
+        <label for="qty-btc">Bitcoin (BTC) detenuti</label>
+        <input id="qty-btc" name="qty-btc" type="number" min="0" step="any" inputmode="decimal" placeholder="es. 0,5" />
       </div>
 
       <div class="field">
-        <label for="qty-eth">Ethereum (ETH) held</label>
-        <input id="qty-eth" name="qty-eth" type="number" min="0" step="any" inputmode="decimal" placeholder="e.g. 4" />
+        <label for="qty-eth">Ethereum (ETH) detenuti</label>
+        <input id="qty-eth" name="qty-eth" type="number" min="0" step="any" inputmode="decimal" placeholder="es. 4" />
       </div>
 
       <div class="field">
-        <label for="giorni">Days held <span class="hint">(default: full year, applies to both)</span></label>
-        <input id="giorni" name="giorni" type="number" min="0" step="1" placeholder="leave blank for full year" />
+        <label for="giorni">Giorni di possesso <span class="hint">(default: anno intero, vale per entrambi)</span></label>
+        <input id="giorni" name="giorni" type="number" min="0" step="1" placeholder="lascia vuoto per l'anno intero" />
       </div>
     </form>
 
@@ -45,17 +45,17 @@
 
     <section id="result" class="result" hidden>
       <div id="regime-note" class="banner banner-warn" hidden>
-        ℹ️ Italy's crypto IC (Quadro RW) and 26% capital-gains regime began in
-        <strong>2023</strong>. Figures for earlier years are illustrative — those
-        rules did not apply yet.
+        ℹ️ In Italia l'IC sulle cripto (Quadro RW) e l'imposta sul capital gain al 26%
+        sono in vigore dal <strong>2023</strong>. I valori per gli anni precedenti
+        sono solo illustrativi: quelle regole non si applicavano ancora.
       </div>
       <h2>Quadro RW — <span id="r-year"></span></h2>
       <table class="rw-table">
         <thead>
           <tr>
             <th>Cripto</th>
-            <th>Valore iniz. (1 Jan)</th>
-            <th>Valore fin. (31 Dec)</th>
+            <th>Valore iniz. (1 gen)</th>
+            <th>Valore fin. (31 dic)</th>
             <th>Giorni</th>
             <th>IC (0,2%)</th>
           </tr>
@@ -72,20 +72,21 @@
         </tfoot>
       </table>
 
-      <p class="rw-hint">↑ The <strong>Totale</strong> row is what goes in Quadro RW: all crypto aggregates into one row (codice bene 21).</p>
+      <p class="rw-hint">↑ La riga <strong>Totale</strong> è quella da riportare nel Quadro RW: tutte le cripto si aggregano in un'unica riga (codice bene 21).</p>
       <p class="info" id="r-info"></p>
       <p class="prices-note" id="r-prices"></p>
     </section>
 
     <footer>
       <p class="disclaimer">
-        <strong>Estimate / compilation aid — not tax advice.</strong>
-        IC (Quadro RW) is a holding tax. Capital gains (Quadro RT, 26% / 33% from 2026)
-        apply only when you <em>sell</em>, and are shown for information only.
-        Values use investing.com daily EUR prices, not the official <em>cambio</em>
-        rates (C.M. 10/2014). Verify before filing.
+        <strong>Strumento di ausilio alla compilazione — non è una consulenza fiscale.</strong>
+        L'IC (Quadro RW) è un'imposta patrimoniale sul possesso. Il capital gain
+        (Quadro RT, 26% / 33% dal 2026) si applica solo quando <em>vendi</em>, ed è
+        mostrato a titolo informativo. I valori usano i prezzi giornalieri in EUR di
+        investing.com, non i <em>cambi</em> ufficiali (C.M. 10/2014). Verifica prima
+        di presentare la dichiarazione.
       </p>
-      <p class="src">Open source · static page · no data leaves your browser.</p>
+      <p class="src">Open source · pagina statica · nessun dato lascia il tuo browser.</p>
     </footer>
   </main>
 

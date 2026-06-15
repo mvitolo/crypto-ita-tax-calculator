@@ -119,7 +119,7 @@ function render() {
   }
 
   if (p.rows.length === 0) {
-    showError("Enter a quantity greater than 0 for BTC and/or ETH.");
+    showError("Inserisci una quantità maggiore di 0 per BTC e/o ETH.");
     return;
   }
 
@@ -137,20 +137,20 @@ function render() {
 
   // capital-gains info (aggregate, Quadro RT — info only)
   const cg = p.capitalGains;
-  const move = p.delta >= 0 ? "gain" : "loss";
-  let info = `Paper ${move} 1 Jan → 31 Dec (total): ${eur.format(p.delta)}. `;
+  const move = p.delta >= 0 ? "plusvalenza" : "minusvalenza";
+  let info = `${move[0].toUpperCase()}${move.slice(1)} teorica 1 gen → 31 dic (totale): ${eur.format(p.delta)}. `;
   if (cg.isLoss) {
-    info += `A loss means no capital-gains tax. `;
+    info += `In caso di minusvalenza non è dovuta imposta sul capital gain. `;
   } else if (cg.tax > 0) {
-    info += `If realized (Quadro RT), capital-gains tax would be ~${eur.format(cg.tax)} at ` +
-      `${(cg.rate * 100).toFixed(0)}%` + (cg.exemption ? ` (after €${cg.exemption} exemption)` : ``) + `. `;
+    info += `Se realizzata (Quadro RT), l'imposta sul capital gain sarebbe ~${eur.format(cg.tax)} al ` +
+      `${(cg.rate * 100).toFixed(0)}%` + (cg.exemption ? ` (dopo la franchigia di €${cg.exemption})` : ``) + `. `;
   } else {
-    info += `Below the exemption, no capital-gains tax would apply. `;
+    info += `Sotto la franchigia, non sarebbe dovuta imposta sul capital gain. `;
   }
-  info += `IC (the total above) is still due — it's a holding tax, not a tax on profit.`;
+  info += `L'IC (il totale qui sopra) è comunque dovuta: è un'imposta sul possesso, non sul profitto.`;
   els.info.textContent = info;
 
-  els.pricesNote.textContent = "Prices: investing.com daily EUR — 1 Jan open, 31 Dec close.";
+  els.pricesNote.textContent = "Prezzi: investing.com EUR giornalieri — apertura 1 gen, chiusura 31 dic.";
   els.regimeNote.hidden = year >= REGIME_START_YEAR;
   els.result.hidden = false;
 }
