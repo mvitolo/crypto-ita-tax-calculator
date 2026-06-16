@@ -95,7 +95,7 @@ input[type="number"]::-webkit-inner-spin-button { -webkit-appearance: none; marg
   margin-bottom: 0.8rem;
 }
 .rw-card:last-child { margin-bottom: 0; }
-.rw-total-card { border-color: var(--accent); background: rgba(79, 156, 249, 0.1); }
+.rw-total-card { border-color: var(--accent); background: rgba(79, 156, 249, 0.1); margin-top: 1rem; }
 .rw-card-title { font-weight: 700; color: #fff; font-size: 0.95rem; padding: 0.5rem 0 0.15rem; }
 
 .rw-fields { margin: 0; }
