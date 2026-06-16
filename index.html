@@ -25,19 +25,15 @@
         <select id="year" name="year"></select>
       </div>
 
-      <div class="field">
-        <label for="qty-btc">Bitcoin (BTC) detenuti</label>
-        <input id="qty-btc" name="qty-btc" type="number" min="0" step="any" inputmode="decimal" placeholder="es. 0,5" />
-      </div>
-
-      <div class="field">
-        <label for="qty-eth">Ethereum (ETH) detenuti</label>
-        <input id="qty-eth" name="qty-eth" type="number" min="0" step="any" inputmode="decimal" placeholder="es. 4" />
-      </div>
-
-      <div class="field">
-        <label for="giorni">Giorni di possesso <span class="hint">(default: anno intero, vale per entrambi)</span></label>
-        <input id="giorni" name="giorni" type="number" min="0" step="1" placeholder="lascia vuoto per l'anno intero" />
+      <div class="field-row">
+        <div class="field">
+          <label for="qty-btc">Bitcoin (BTC)</label>
+          <input id="qty-btc" name="qty-btc" type="number" min="0" step="any" inputmode="decimal" placeholder="es. 0,5" />
+        </div>
+        <div class="field">
+          <label for="qty-eth">Ethereum (ETH)</label>
+          <input id="qty-eth" name="qty-eth" type="number" min="0" step="any" inputmode="decimal" placeholder="es. 4" />
+        </div>
       </div>
     </form>
 
@@ -49,30 +45,36 @@
         sono in vigore dal <strong>2023</strong>. I valori per gli anni precedenti
         sono solo illustrativi: quelle regole non si applicavano ancora.
       </div>
-      <h2>Quadro RW — <span id="r-year"></span></h2>
-      <table class="rw-table">
-        <thead>
-          <tr>
-            <th>Cripto</th>
-            <th>Valore iniz. (1 gen)</th>
-            <th>Valore fin. (31 dic)</th>
-            <th>Giorni</th>
-            <th>IC (0,2%)</th>
-          </tr>
-        </thead>
-        <tbody id="r-rows"></tbody>
-        <tfoot>
-          <tr class="highlight">
-            <th>Totale · codice 21</th>
-            <td id="t-iniziale"></td>
-            <td id="t-finale"></td>
-            <td id="t-giorni"></td>
-            <td id="t-ic"></td>
-          </tr>
-        </tfoot>
-      </table>
 
-      <p class="rw-hint">↑ La riga <strong>Totale</strong> è quella da riportare nel Quadro RW: tutte le cripto si aggregano in un'unica riga (codice bene 21).</p>
+      <!-- Live Quadro RW simulation: the single row to file -->
+      <div class="rw-sim">
+        <div class="rw-sim-head">
+          <span class="rw-sim-tag">Simulazione Quadro RW</span>
+          <span class="rw-sim-year" id="r-year"></span>
+        </div>
+        <p class="rw-sim-sub">Una sola riga per tutte le cripto — <strong>codice bene 21</strong>.</p>
+        <dl class="rw-fields">
+          <div><dt>Codice bene</dt><dd>21</dd></div>
+          <div><dt>Quota di possesso</dt><dd>100%</dd></div>
+          <div><dt>Valore iniziale (1 gen)</dt><dd id="q-iniziale"></dd></div>
+          <div><dt>Valore finale (31 dic)</dt><dd id="q-finale"></dd></div>
+          <div><dt>Giorni di possesso</dt><dd id="q-giorni"></dd></div>
+          <div class="hero"><dt>IC dovuta</dt><dd id="q-ic"></dd></div>
+        </dl>
+        <p class="rw-sim-note" id="q-note"></p>
+      </div>
+
+      <!-- Per-coin breakdown -->
+      <details class="breakdown" id="breakdown">
+        <summary>Dettaglio per cripto</summary>
+        <table class="rw-table">
+          <thead>
+            <tr><th>Cripto</th><th>Valore iniz.</th><th>Valore fin.</th><th>IC (0,2%)</th></tr>
+          </thead>
+          <tbody id="r-rows"></tbody>
+        </table>
+      </details>
+
       <p class="info" id="r-info"></p>
       <p class="prices-note" id="r-prices"></p>
     </section>
