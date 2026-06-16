@@ -46,34 +46,17 @@
         sono solo illustrativi: quelle regole non si applicavano ancora.
       </div>
 
-      <!-- Live Quadro RW simulation: the single row to file -->
+      <!-- Live Quadro RW simulation -->
       <div class="rw-sim">
         <div class="rw-sim-head">
           <span class="rw-sim-tag">Simulazione Quadro RW</span>
           <span class="rw-sim-year" id="r-year"></span>
         </div>
-        <p class="rw-sim-sub">Una sola riga per tutte le cripto — <strong>codice bene 21</strong>.</p>
-        <dl class="rw-fields">
-          <div><dt>Codice bene</dt><dd>21</dd></div>
-          <div><dt>Quota di possesso</dt><dd>100%</dd></div>
-          <div><dt>Valore iniziale (1 gen)</dt><dd id="q-iniziale"></dd></div>
-          <div><dt>Valore finale (31 dic)</dt><dd id="q-finale"></dd></div>
-          <div><dt>Giorni di possesso</dt><dd id="q-giorni"></dd></div>
-          <div class="hero"><dt>IC dovuta</dt><dd id="q-ic"></dd></div>
-        </dl>
+        <p class="rw-sim-sub">Una riga per ogni cripto — <strong>codice bene 21</strong>.</p>
+        <div id="rw-rows"></div>
+        <div id="rw-total"></div>
         <p class="rw-sim-note" id="q-note"></p>
       </div>
-
-      <!-- Per-coin breakdown -->
-      <details class="breakdown" id="breakdown">
-        <summary>Dettaglio per cripto</summary>
-        <table class="rw-table">
-          <thead>
-            <tr><th>Cripto</th><th>Valore iniz.</th><th>Valore fin.</th><th>IC (0,2%)</th></tr>
-          </thead>
-          <tbody id="r-rows"></tbody>
-        </table>
-      </details>
 
       <p class="info" id="r-info"></p>
       <p class="prices-note" id="r-prices"></p>

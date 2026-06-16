@@ -1,7 +1,8 @@
 // DOM layer: wires the form to the pure calc.js logic, syncs state to the URL,
-// renders a live Quadro RW simulation (single aggregated row) plus a per-coin
-// breakdown. All math lives in calc.js (unit-tested). Holdings are assumed held
-// for the full year (no days-held input).
+// and renders a live Quadro RW simulation. Each cripto is shown as its own
+// fileable row (codice 21); the aggregated total is shown as an alternative,
+// since Italian rules don't clearly mandate one row vs separate rows.
+// All math lives in calc.js (unit-tested). Holdings assumed held the full year.
 
 import { computePortfolio, availableYears, REGIME_START_YEAR } from "./calc.js";
 import { PRICES, COINS, hasUnverifiedPrices } from "./prices.js";
@@ -14,7 +15,7 @@ const eur0 = new Intl.NumberFormat("it-IT", {
   style: "currency", currency: "EUR", minimumFractionDigits: 0, maximumFractionDigits: 0,
 });
 
-const LABEL = { bitcoin: "BTC", ethereum: "ETH" };
+const NAME = { bitcoin: "Bitcoin (BTC)", ethereum: "Ethereum (ETH)" };
 
 const $ = (id) => document.getElementById(id);
 const els = {
@@ -24,11 +25,8 @@ const els = {
   error: $("error"),
   result: $("result"),
   yearOut: $("r-year"),
-  rows: $("r-rows"),
-  qIniziale: $("q-iniziale"),
-  qFinale: $("q-finale"),
-  qGiorni: $("q-giorni"),
-  qIc: $("q-ic"),
+  rwRows: $("rw-rows"),
+  rwTotal: $("rw-total"),
   qNote: $("q-note"),
   info: $("r-info"),
   pricesNote: $("r-prices"),
@@ -60,31 +58,60 @@ function writeUrl() {
   history.replaceState(null, "", `${location.pathname}?${p.toString()}`);
 }
 
-// ── Render helpers ───────────────────────────────────────────────────────────
+// ── DOM builders ─────────────────────────────────────────────────────────────
+function field(label, value, hero = false) {
+  const row = document.createElement("div");
+  if (hero) row.className = "hero";
+  const dt = document.createElement("dt");
+  dt.textContent = label;
+  const dd = document.createElement("dd");
+  dd.textContent = value;
+  row.append(dt, dd);
+  return row;
+}
+
+function card(title, fields, className = "rw-card") {
+  const box = document.createElement("div");
+  box.className = className;
+  const h = document.createElement("div");
+  h.className = "rw-card-title";
+  h.textContent = title;
+  const dl = document.createElement("dl");
+  dl.className = "rw-fields";
+  dl.append(...fields);
+  box.append(h, dl);
+  return box;
+}
+
+function coinCard(r) {
+  return card(NAME[r.coin] || r.coin, [
+    field("Codice bene", "21"),
+    field("Quota di possesso", "100%"),
+    field("Valore iniziale (1 gen)", eur.format(r.valoreIniziale)),
+    field("Valore finale (31 dic)", eur.format(r.valoreFinale)),
+    field("Giorni di possesso", String(r.daysInYear)),
+    field("IC dovuta (0,2%)", eur2.format(r.ic), true),
+  ]);
+}
+
+function totalCard(p) {
+  return card("Se aggregato in un'unica riga", [
+    field("Codice bene", "21"),
+    field("Valore iniziale (1 gen)", eur.format(p.valoreIniziale)),
+    field("Valore finale (31 dic)", eur.format(p.valoreFinale)),
+    field("IC totale da versare", eur0.format(Math.round(p.ic)), true),
+  ], "rw-card rw-total-card");
+}
+
+// ── Render ──────────────────────────────────────────────────────────────────
 function showError(msg) {
   els.error.textContent = msg;
   els.error.hidden = false;
   els.result.hidden = true;
 }
 
-function clearError() {
-  els.error.hidden = true;
-}
-
-function rowHtml(r) {
-  const tr = document.createElement("tr");
-  const cells = [LABEL[r.coin] || r.coin, eur.format(r.valoreIniziale), eur.format(r.valoreFinale), eur2.format(r.ic)];
-  cells.forEach((text, i) => {
-    const cell = document.createElement(i === 0 ? "th" : "td");
-    cell.textContent = text;
-    tr.appendChild(cell);
-  });
-  return tr;
-}
-
-// ── Render ──────────────────────────────────────────────────────────────────
 function render() {
-  clearError();
+  els.error.hidden = true;
   writeUrl();
 
   const year = Number(els.year.value);
@@ -103,7 +130,7 @@ function render() {
 
   let p;
   try {
-    p = computePortfolio({ prices: PRICES, year, holdings }); // full year (no giorni)
+    p = computePortfolio({ prices: PRICES, year, holdings }); // full year
   } catch (err) {
     showError(err.message);
     return;
@@ -114,18 +141,18 @@ function render() {
     return;
   }
 
-  const days = p.rows[0].daysInYear;
-
-  // Quadro RW simulation (the single row to file)
   els.yearOut.textContent = String(year);
-  els.qIniziale.textContent = eur.format(p.valoreIniziale);
-  els.qFinale.textContent = eur.format(p.valoreFinale);
-  els.qGiorni.textContent = String(days); // full year
-  els.qIc.textContent = eur0.format(Math.round(p.ic)); // imposta arrotondata all'euro
-  els.qNote.textContent = `IC = ${eur2.format(p.ic)} → arrotondata a ${eur0.format(Math.round(p.ic))}. 0,2% del valore finale.`;
 
-  // Per-coin breakdown
-  els.rows.replaceChildren(...p.rows.map(rowHtml));
+  // One card per cripto (each a fileable RW row)
+  els.rwRows.replaceChildren(...p.rows.map(coinCard));
+
+  // Aggregated total only matters with 2+ holdings
+  els.rwTotal.replaceChildren(p.rows.length > 1 ? totalCard(p) : "");
+
+  const totalIc = `${eur2.format(p.ic)} → ${eur0.format(Math.round(p.ic))} arrotondata`;
+  els.qNote.textContent =
+    `IC totale ${totalIc}. L'imposta si arrotonda all'euro. Righe separate o ` +
+    `un'unica riga aggregata: entrambi gli approcci sono diffusi — conferma col tuo commercialista.`;
 
   // Capital-gains info (aggregate, Quadro RT — info only)
   const cg = p.capitalGains;
