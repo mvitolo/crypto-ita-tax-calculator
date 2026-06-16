@@ -4,7 +4,7 @@
 // since Italian rules don't clearly mandate one row vs separate rows.
 // All math lives in calc.js (unit-tested). Holdings assumed held the full year.
 
-import { computePortfolio, availableYears, REGIME_START_YEAR } from "./calc.js";
+import { computePortfolio, availableYears, REGIME_START_YEAR, IC_CODICE_TRIBUTO } from "./calc.js";
 import { PRICES, COINS, hasUnverifiedPrices } from "./prices.js";
 
 const eur = new Intl.NumberFormat("it-IT", { style: "currency", currency: "EUR" });
@@ -89,14 +89,13 @@ function coinCard(r) {
     field("Quota di possesso", "100%"),
     field("Valore iniziale (1 gen)", eur.format(r.valoreIniziale)),
     field("Valore finale (31 dic)", eur.format(r.valoreFinale)),
-    field("Giorni di possesso", String(r.daysInYear)),
+    field("Giorni di possesso", String(r.giorni)),
     field("IC dovuta (0,2%)", eur2.format(r.ic), true),
   ]);
 }
 
 function totalCard(p) {
-  return card("Se aggregato in un'unica riga", [
-    field("Codice bene", "21"),
+  return card("Totale da versare (somma dei righi)", [
     field("Valore iniziale (1 gen)", eur.format(p.valoreIniziale)),
     field("Valore finale (31 dic)", eur.format(p.valoreFinale)),
     field("IC totale da versare", eur0.format(Math.round(p.ic)), true),
@@ -151,8 +150,10 @@ function render() {
 
   const totalIc = `${eur2.format(p.ic)} → ${eur0.format(Math.round(p.ic))} arrotondata`;
   els.qNote.textContent =
-    `IC totale ${totalIc}. L'imposta si arrotonda all'euro. Righe separate o ` +
-    `un'unica riga aggregata: entrambi gli approcci sono diffusi — conferma col tuo commercialista.`;
+    `IC totale ${totalIc} (si arrotonda all'euro). Le istruzioni AdE compilano un ` +
+    `rigo distinto per ogni cripto (colonne 3=21, 5=quota, 7=val. iniziale, 8=val. finale, ` +
+    `10=giorni, 33/34=IC). Versamento con modello F24, codice tributo ${IC_CODICE_TRIBUTO}. ` +
+    `Conferma sempre col tuo commercialista.`;
 
   // Capital-gains info (aggregate, Quadro RT — info only)
   const cg = p.capitalGains;

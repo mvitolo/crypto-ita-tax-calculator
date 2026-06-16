@@ -59,19 +59,19 @@ test("lookupPrice: missing year throws", () => {
   assert.throws(() => lookupPrice(PRICES, "bitcoin", 1999, "start"), /No price data yet/);
 });
 
-// ── computeIC (Quadro RW holding tax) ───────────────────────────────────────
-test("IC: full year = valoreFinale × 0.2%", () => {
-  close(computeIC({ valoreFinale: 100000, giorni: 365, year: 2023 }), 200);
+// ── computeIC (Quadro RW holding tax) — official /365 basis ─────────────────
+test("IC: full year (365) = valoreFinale × 0.2%", () => {
+  close(computeIC({ valoreFinale: 100000, giorni: 365 }), 200);
 });
-test("IC: leap year full year still = valoreFinale × 0.2%", () => {
-  close(computeIC({ valoreFinale: 100000, giorni: 366, year: 2024 }), 200);
+test("IC: divisor is always 365 (even for leap-year holdings)", () => {
+  // Full-year holding is reported as 365 giorni per the AdE example (365/365)
+  close(computeIC({ valoreFinale: 100000, giorni: 365 }), 200);
 });
-test("IC: half year is pro-rated", () => {
-  // 2023 has 365 days; ~half
-  close(computeIC({ valoreFinale: 100000, giorni: 182, year: 2023 }), 100000 * 0.002 * (182 / 365));
+test("IC: half year is pro-rated over 365", () => {
+  close(computeIC({ valoreFinale: 100000, giorni: 182 }), 100000 * 0.002 * (182 / 365));
 });
 test("IC: zero days held = 0", () => {
-  close(computeIC({ valoreFinale: 100000, giorni: 0, year: 2023 }), 0);
+  close(computeIC({ valoreFinale: 100000, giorni: 0 }), 0);
 });
 
 // ── computeCapitalGainsInfo ─────────────────────────────────────────────────
@@ -102,10 +102,10 @@ test("computeRW: BTC 2024 full year produces consistent figures", () => {
   const r = computeRW({ prices: PRICES, coin: "bitcoin", year: 2024, quantity: 2 });
   close(r.valoreIniziale, 2 * start);
   close(r.valoreFinale, 2 * end);
-  close(r.ic, 2 * end * 0.002); // full year (366/366)
+  close(r.ic, 2 * end * 0.002); // full year (365/365)
   close(r.delta, 2 * (end - start));
-  assert.equal(r.giorni, 366);
-  assert.equal(r.daysInYear, 366);
+  assert.equal(r.giorni, 365); // official full-year basis
+  assert.equal(r.daysBasis, 365);
 });
 test("computeRW: quantity 0 gives all zeros", () => {
   const r = computeRW({ prices: PRICES, coin: "ethereum", year: 2023, quantity: 0 });
@@ -136,8 +136,8 @@ test("computeRW: missing year throws (in-progress / no data)", () => {
 test("GOLDEN: IC and capital gains for a €90,200 / €40,000 holding in 2024", () => {
   const valoreFinale = 90200;
   const valoreIniziale = 40000;
-  // IC = 90200 × 0.002 × 366/366 = 180.40
-  close(computeIC({ valoreFinale, giorni: 366, year: 2024 }), 180.4);
+  // IC = 90200 × 0.002 × 365/365 = 180.40
+  close(computeIC({ valoreFinale, giorni: 365 }), 180.4);
   // delta = 50,200; exemption 2,000 → taxable 48,200; tax = 48,200 × 0.26 = 12,532
   const cg = computeCapitalGainsInfo({ delta: valoreFinale - valoreIniziale, year: 2024 });
   close(cg.taxable, 48200);

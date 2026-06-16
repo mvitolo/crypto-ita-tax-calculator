@@ -22,7 +22,13 @@
 
 export const TAX_RULES = {
   icRate: 0.002, // 0.2% Imposta sulle Criptoattivita (Quadro RW)
+  // Official basis: imposta = valore × 0,20% × (giorni / 365) × quota.
+  // The AdE instructions use 365 even in leap years (example: "365/365").
+  icDaysBasis: 365,
 };
+
+// F24 codice tributo for paying the crypto IC (AdE instructions, RW8).
+export const IC_CODICE_TRIBUTO = "1727";
 
 // The Italian crypto IC (Quadro RW) and 26% capital-gains regime both began in
 // 2023 (L. 197/2022). Figures for earlier years are illustrative only.
@@ -66,9 +72,10 @@ export function lookupPrice(prices, coin, year, boundary) {
   return entry;
 }
 
-// IC = valore finale × 0.2% × (giorni / daysInYear). Pro-rated by days held.
-export function computeIC({ valoreFinale, giorni, year }) {
-  return valoreFinale * TAX_RULES.icRate * (giorni / daysInYear(year));
+// IC = valore finale × 0,20% × (giorni / 365). Official AdE basis is 365 days,
+// even in leap years (a full year of holding = 365 giorni → factor 1).
+export function computeIC({ valoreFinale, giorni }) {
+  return valoreFinale * TAX_RULES.icRate * (giorni / TAX_RULES.icDaysBasis);
 }
 
 // Capital-gains INFO line (Quadro RT). Informational only — tax applies on
@@ -89,7 +96,7 @@ export function computeRW({ prices, coin, year, quantity, giorni }) {
   if (!Number.isFinite(quantity) || quantity < 0) {
     throw new RangeError("Quantity must be a number ≥ 0.");
   }
-  const days = daysInYear(year);
+  const days = TAX_RULES.icDaysBasis; // 365 (official basis, full year)
   const g = giorni == null ? days : giorni;
   if (!Number.isFinite(g) || g < 0 || g > days) {
     throw new RangeError(`Days held must be between 0 and ${days}.`);
@@ -100,7 +107,7 @@ export function computeRW({ prices, coin, year, quantity, giorni }) {
 
   const valoreIniziale = quantity * start.value;
   const valoreFinale = quantity * end.value;
-  const ic = computeIC({ valoreFinale, giorni: g, year });
+  const ic = computeIC({ valoreFinale, giorni: g });
   const delta = valoreFinale - valoreIniziale;
   const capitalGains = computeCapitalGainsInfo({ delta, year });
 
@@ -109,7 +116,7 @@ export function computeRW({ prices, coin, year, quantity, giorni }) {
     year,
     quantity,
     giorni: g,
-    daysInYear: days,
+    daysBasis: days,
     priceStart: start,
     priceEnd: end,
     valoreIniziale,
